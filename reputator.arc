@@ -1,13 +1,22 @@
 ; start of something neat...
 
-(= datadir* "data/" users* (table))
 (= title* "reputator")
+(= datadir* "data/") 
 
-(deftem user
-  name nil
-  passwd nil)
+(def datadir (file)
+  (string datadir* "/" file))
 
-(def user (name) (users* name))
+(deftem point
+  for nil
+  from nil
+  val nil
+  date nil)
+
+(= pointfile* (datadir "points"))
+(= points* (temloadall 'point pointfile*))
+
+(def user? (name)
+  (mem name (keys user->cookie*)))
 
 (mac rep-page body
   `(whitepage
@@ -18,19 +27,38 @@
          ,@body
          (br 3)
          (w/bars (link "users")
-                 (link "+/-1"))))))
+                 (link "scoreboard")
+                 (link "about"))))))
 
-(defop view req
-  (aif (user (arg req "user"))
+(defop user req
+  (aif (user? (arg req "name"))
        (user-page it)
        (not-found)))
 
-(def user-page (user)
-  (pr user))
+(defop login req 
+  (login-page 'both))
+
+(def user-page (name)
+  (rep-page 
+    (pr name)))
+
+(def user-points (name)
+  (points*))
+
+(def save-points ()
+  (w/outfile of pointfile* (each x points* (write-table x of))))
+
+(def add-point (to from val date)
+  (= points* (cons (inst 'point 'to to 'from from 'val val 'date date) points*))
+  (save-points))
 
 (def not-found ()
-  (rep-page (pr "no such user.")))
+  (rep-page 
+    (pr "no such user.")))
 
-(def go-rep ()
+(def rep-start ()
   (ensure-dir datadir*)
-  (asv))
+  (= srv* (asv)))
+
+(def rep-stop ()
+  (= quitsrv* t))
