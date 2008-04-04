@@ -7,7 +7,7 @@
   (string datadir* "/" file))
 
 (deftem point
-  for nil
+  to nil
   from nil
   val nil
   date nil)
@@ -32,7 +32,7 @@
 
 (defop user req
   (aif (user? (arg req "name"))
-       (user-page it)
+       (user-page (reduce 'string it))
        (not-found)))
 
 (defop login req 
@@ -40,10 +40,11 @@
 
 (def user-page (name)
   (rep-page 
-    (pr name)))
+    (pr name)
+    (each x (user-points name) (pr x))))
 
 (def user-points (name)
-  (points*))
+  (trues (fn (_) (if (is _!to name) _)) points*))
 
 (def save-points ()
   (w/outfile of pointfile* (each x points* (write-table x of))))
