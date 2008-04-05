@@ -40,7 +40,8 @@
        (not-found)))
 
 (defop login req 
-  (login-page 'both))
+  (login-page 'login "your reputation proceeds you."
+              (list nilfn "scoreboard")))
 
 (def user-page (name)
   (rep-page
