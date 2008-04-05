@@ -89,9 +89,9 @@
   (rep-page
     (pr "about")))
 
-(def rep-start ()
+(def rep-start (o port 8080)
   (ensure-dir datadir*)
-  (= srv* (asv)))
+  (= srv* (asv port)))
 
 (def rep-stop ()
   (= quitsrv* t))
