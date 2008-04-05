@@ -16,8 +16,10 @@
 (= pointfile* (datadir "points"))
 (= points* (temloadall 'point pointfile*))
 
+(= users* (keys (load-tables "arc/hpw")))
+
 (def user? (name)
-  (mem name (keys user->cookie*)))
+  (mem name users*))
 
 (mac rep-page body
   `(whitepage
@@ -80,10 +82,9 @@
     (pr "scoreboard")
     (br 2)
     (sptab
-      (let users (keys user->cookie*)
-        (each u users
-          (tr (td (w/link (user-page u) (pr u)))
-              (td (pr (score u)))))))))
+      (each u users*
+        (tr (td (w/link (user-page u) (pr u)))
+            (td (pr (score u))))))))
 
 (defop about req
   (rep-page
