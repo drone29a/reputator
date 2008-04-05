@@ -16,7 +16,7 @@
 (= pointfile* (datadir "points"))
 (= points* (temloadall 'point pointfile*))
 
-(= users* (keys (load-tables "arc/hpw")))
+(= users* (map [keys _] (load-tables "arc/hpw")))
 
 (def user? (name)
   (mem name users*))
